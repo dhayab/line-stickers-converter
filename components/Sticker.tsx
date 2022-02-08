@@ -1,4 +1,5 @@
 import { Image, Paper } from '@mantine/core';
+
 import { useStickerPack } from '../utils/useStickerPack';
 
 type Props = {

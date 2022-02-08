@@ -47,7 +47,11 @@ export default function Home() {
         </Title>
         <Text color="dimmed" size="md">
           This tool allows you to use{' '}
-          <Anchor href="https://store.line.me/home" rel="nofollow">
+          <Anchor
+            href="https://store.line.me/home"
+            rel="nofollow"
+            target="_blank"
+          >
             sticker packs from Line
           </Anchor>{' '}
           in iMessage by importing them to{' '}

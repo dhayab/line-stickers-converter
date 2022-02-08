@@ -2,23 +2,33 @@ import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 
 import {
+  ActionIcon,
   Affix,
   AppShell,
   Button,
   Container,
+  Divider,
   Header,
+  Menu,
   SimpleGrid,
   Text,
+  useMantineColorScheme,
 } from '@mantine/core';
 import { NotificationProps, useNotifications } from '@mantine/notifications';
-import { RocketIcon } from '@modulz/radix-icons';
+import {
+  BlendingModeIcon,
+  ExternalLinkIcon,
+  MixerVerticalIcon,
+  RocketIcon,
+} from '@modulz/radix-icons';
 
 import StickerPackHeader from '../../components/StickerPackHeader';
 import Sticker from '../../components/Sticker';
 import { useStickerPack } from '../../utils/useStickerPack';
-import { generateStickerDoodlePack } from '../../utils/createStickerDoodlePack';
+import { generateStickerDoodlePack } from '../../utils/generateStickerDoodlePack';
 
 export default function Pack() {
+  const { toggleColorScheme } = useMantineColorScheme();
   const notifications = useNotifications();
   const notification = useRef<string | undefined>(undefined);
 
@@ -109,30 +119,67 @@ export default function Pack() {
           height={80}
           sx={{ backgroundColor: 'transparent', backdropFilter: 'blur(40px)' }}
         >
-          <StickerPackHeader state={state} meta={meta} />
+          <StickerPackHeader state={state} meta={meta}>
+            <Menu
+              control={
+                <ActionIcon
+                  disabled={state !== 'loaded' || converting}
+                  radius="xl"
+                  color="violet"
+                >
+                  <MixerVerticalIcon />
+                </ActionIcon>
+              }
+            >
+              <Menu.Label>Information</Menu.Label>
+              <Menu.Item disabled>From {meta.author}</Menu.Item>
+              <Menu.Item
+                component="a"
+                href={`https://store.line.me/stickershop/product/${id}/en`}
+                rel="nofollow"
+                target="_blank"
+                icon={<ExternalLinkIcon />}
+              >
+                Line Store
+              </Menu.Item>
+              <Menu.Label>Settings</Menu.Label>
+              <Menu.Item
+                icon={<BlendingModeIcon />}
+                onClick={() => toggleColorScheme()}
+              >
+                Toggle dark mode
+              </Menu.Item>
+              <Divider />
+              <Menu.Item icon={<RocketIcon />} color="violet" onClick={convert}>
+                Convert
+              </Menu.Item>
+            </Menu>
+          </StickerPackHeader>
         </Header>
       }
     >
       {state === 'loaded' && (
-        <Container mb={80}>
-          <SimpleGrid cols={4} my="md">
-            {files.map((file) => (
-              <Sticker key={file.name} file={file} />
-            ))}
-          </SimpleGrid>
-        </Container>
+        <>
+          <Container mb={80}>
+            <SimpleGrid cols={3} my="md">
+              {files.map((file) => (
+                <Sticker key={file.name} file={file} />
+              ))}
+            </SimpleGrid>
+          </Container>
+          <Affix position={{ bottom: 20, right: 20 }}>
+            <Button
+              size="lg"
+              radius="xl"
+              leftIcon={<RocketIcon />}
+              loading={converting}
+              onClick={convert}
+            >
+              Convert
+            </Button>
+          </Affix>
+        </>
       )}
-      <Affix position={{ bottom: 20, right: 20 }}>
-        <Button
-          size="lg"
-          radius="xl"
-          leftIcon={<RocketIcon />}
-          loading={converting}
-          onClick={() => convert()}
-        >
-          Convert
-        </Button>
-      </Affix>
     </AppShell>
   );
 }

@@ -1,29 +1,26 @@
+import { PropsWithChildren, useEffect, useState } from 'react';
+import Link from 'next/link';
+
 import {
   ActionIcon,
-  Anchor,
   Center,
   Container,
   Group,
   Image,
   Skeleton,
   Text,
-  ThemeIcon,
-  useMantineColorScheme,
 } from '@mantine/core';
-import {
-  ChevronLeftIcon,
-  HomeIcon,
-  MoonIcon,
-  SunIcon,
-} from '@modulz/radix-icons';
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { ChevronLeftIcon } from '@modulz/radix-icons';
+
 import { useStickerPack } from '../utils/useStickerPack';
 
 type Props = Pick<ReturnType<typeof useStickerPack>, 'meta' | 'state'>;
 
-export default function StickerPackHeader({ meta, state }: Props) {
-  const { colorScheme, toggleColorScheme } = useMantineColorScheme();
+export default function StickerPackHeader({
+  meta,
+  state,
+  children,
+}: PropsWithChildren<Props>) {
   const [icon, setIcon] = useState<string | undefined>();
   const [loading, setLoading] = useState(true);
 
@@ -42,9 +39,14 @@ export default function StickerPackHeader({ meta, state }: Props) {
       <Group sx={{ justifyContent: 'space-between' }}>
         <Group spacing="xs">
           <Link href="/" passHref>
-            <ThemeIcon variant="light" color="violet">
+            <ActionIcon
+              component="a"
+              variant="hover"
+              color="violet"
+              radius="xl"
+            >
               <ChevronLeftIcon />
-            </ThemeIcon>
+            </ActionIcon>
           </Link>
           <Skeleton width={60} height={60} visible={loading}>
             {icon && <Image height={60} src={icon} alt={meta.name} />}
@@ -62,14 +64,7 @@ export default function StickerPackHeader({ meta, state }: Props) {
             </Container>
           </Center>
         </Group>
-        <ActionIcon
-          variant="outline"
-          color={colorScheme === 'light' ? 'blue' : 'yellow'}
-          onClick={() => toggleColorScheme()}
-          title="Toggle color scheme"
-        >
-          {colorScheme === 'light' ? <MoonIcon /> : <SunIcon />}
-        </ActionIcon>
+        {children}
       </Group>
     </Container>
   );

@@ -8,6 +8,7 @@ type File = {
 
 type Meta = {
   name?: string;
+  author?: string;
   icon?: Blob;
   count?: number;
 };
@@ -49,6 +50,8 @@ export function useStickerPack(packId: string | string[] | undefined) {
             productInfo.title.en ||
             productInfo.title.ja ||
             'Unnamed sticker pack',
+          author:
+            productInfo.author.en || productInfo.author.ja || 'Unknown author',
           icon: await zip.file('tab_on@2x.png')?.async('blob'),
           count: productInfo.stickers.length,
         });
